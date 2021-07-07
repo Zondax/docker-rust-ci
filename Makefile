@@ -1,26 +1,53 @@
-DOCKER_IMAGE="zondax/rust-ci"
+DOCKER_IMAGE_PREFIX=zondax/
+DOCKER_IMAGE=${DOCKER_IMAGE_PREFIX}rust-ci
+
+INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
+
+ifdef INTERACTIVE
+INTERACTIVE_SETTING:="-i"
+TTY_SETTING:="-t"
+else
+INTERACTIVE_SETTING:=
+TTY_SETTING:=
+endif
+
+ifdef HASH
+HASH_TAG:=$(HASH)
+else
+HASH_TAG:=latest
+endif
+
+default: build
+
+build:
+	cd src && docker build --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+
+publish_login:
+	docker login
+publish: build
+	docker push $(DOCKER_IMAGE):latest
+	docker push $(DOCKER_IMAGE):$(HASH_TAG)
+
+publish: build
+publish: publish_login
+publish: publish
+
+push: publish
+
+pull:
+	docker pull $(DOCKER_IMAGE):$(HASH_TAG)
 
 define run_docker
-	docker run -it --rm \
+	docker run $(TTY_SETTING) $(INTERACTIVE_SETTING) \
 	--privileged \
-	-u $(shell id -u) \
+	-u $(shell id -u):$(shell id -g) \
 	-v $(shell pwd):/project \
 	-e DISPLAY=$(shell echo ${DISPLAY}) \
 	-v /tmp/.X11-unix:/tmp/.X11-unix:ro \
-	$(DOCKER_IMAGE) \
-	"$(1)"
+	$(1) \
+	"$(2)"
 endef
 
-build:
-	docker build --rm -f Dockerfile -t $(DOCKER_IMAGE) .
 
-publish:
-	docker login
-	docker build --rm -f Dockerfile -t $(DOCKER_IMAGE) .
-	docker push $(DOCKER_IMAGE)
-
-pull:
-	docker pull $(DOCKER_IMAGE)
-
-shell:
-	$(call run_docker,bash)
+shell: build
+	$(call run_docker,$(DOCKER_IMAGE):$(HASH_TAG),/bin/bash)

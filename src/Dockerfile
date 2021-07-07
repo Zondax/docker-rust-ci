@@ -1,5 +1,5 @@
 #*******************************************************************************
-#    (c) 2020 ZondaX GmbH
+#    (c) 2020 Zondax GmbH
 # 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -15,21 +15,44 @@
 #*******************************************************************************
 FROM circleci/rust:latest
 
-RUN cargo install sccache
-ENV RUSTC_WRAPPER sccache
-ENV SCCACHE_CACHE_SIZE 1G
+ENV DEBIAN_FRONTEND noninteractive
+RUN sudo apt-get update && \
+    sudo apt-get install -y curl apt-utils protobuf-compiler
+
+RUN rustc --version
 
 RUN rustup component add clippy
+RUN rustup component add rustfmt
+RUN cargo install sccache
 RUN cargo install cargo-audit
+RUN cargo install wasm-pack
 
-ENV DEBIAN_FRONTEND noninteractive
+# Add fixed 1.47
+RUN rustup toolchain install 1.47.0
+RUN rustup component add rustfmt --toolchain 1.47.0
+RUN rustup component add clippy --toolchain 1.47.0
+RUN cargo +1.47.0 install sccache
+RUN cargo +1.47.0 install cargo-audit
+RUN cargo +1.47.0 install wasm-pack
+RUN cargo +1.47.0 install cargo-tree
+
+# Add fixed 1.49
+RUN rustup toolchain install 1.49.0
+RUN rustup component add rustfmt --toolchain 1.49.0
+RUN rustup component add clippy --toolchain 1.49.0
+RUN cargo +1.49.0 install sccache
+RUN cargo +1.49.0 install cargo-audit
+RUN cargo +1.49.0 install wasm-pack
+RUN cargo +1.49.0 install cargo-tree
 
 # Install latest node
 RUN sudo curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt-get update && sudo apt-get install -y nodejs yarn
 
-RUN sudo apt-get update && \
-    sudo apt-get install -y nodejs curl yarn apt-utils
-
+RUN yarn --version
 RUN sudo yarn global add n
 RUN sudo n latest -q
+
+ENV RUSTC_WRAPPER sccache
+ENV SCCACHE_CACHE_SIZE 1G
