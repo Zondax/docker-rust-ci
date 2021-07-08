@@ -21,31 +21,15 @@ RUN apt-get update && \
 
 RUN rustc --version
 
+RUN rustup toolchain install 1.53.0
 RUN rustup component add clippy
 RUN rustup component add rustfmt
 RUN cargo install sccache
 RUN cargo install cargo-audit
 RUN cargo install wasm-pack
+RUN cargo install cargo-tree
 
-# Add fixed 1.47
-RUN rustup toolchain install 1.47.0
-RUN rustup component add rustfmt --toolchain 1.47.0
-RUN rustup component add clippy --toolchain 1.47.0
-RUN cargo +1.47.0 install sccache
-RUN cargo +1.47.0 install cargo-audit
-RUN cargo +1.47.0 install wasm-pack
-RUN cargo +1.47.0 install cargo-tree
-
-# Add fixed 1.49
-RUN rustup toolchain install 1.49.0
-RUN rustup component add rustfmt --toolchain 1.49.0
-RUN rustup component add clippy --toolchain 1.49.0
-RUN cargo +1.49.0 install sccache
-RUN cargo +1.49.0 install cargo-audit
-RUN cargo +1.49.0 install wasm-pack
-RUN cargo +1.49.0 install cargo-tree
-
-# Install latest node
+# Install lastest lts node
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get -y install nodejs
 RUN npm install -g yarn
@@ -53,7 +37,7 @@ RUN npm install -g yarn
 RUN node -v
 RUN yarn --version
 RUN yarn global add n
-RUN n latest -q
+RUN n lts_latest -q
 
 ENV RUSTC_WRAPPER sccache
 ENV SCCACHE_CACHE_SIZE 1G
