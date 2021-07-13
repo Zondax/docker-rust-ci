@@ -39,5 +39,9 @@ RUN yarn --version
 RUN yarn global add n
 RUN n lts_latest -q
 
+# Add github user (1001) to sudoers list
+RUN adduser --disabled-password --gecos "" -u 1001 github
+RUN echo "github ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 ENV RUSTC_WRAPPER sccache
 ENV SCCACHE_CACHE_SIZE 1G
