@@ -31,7 +31,7 @@ RUN cargo install cargo-tree
 
 # Install lastest lts node
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get -y install nodejs
+RUN apt-get -y install nodejs sudo
 RUN npm install -g yarn
 
 RUN node -v
