@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #*******************************************************************************
-FROM rust:1.53.0
+FROM rust:1.55.0
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
@@ -21,7 +21,7 @@ RUN apt-get update && \
 
 RUN rustc --version
 
-RUN rustup toolchain install 1.53.0
+RUN rustup toolchain install 1.55.0
 RUN rustup component add clippy
 RUN rustup component add rustfmt
 RUN cargo install sccache
