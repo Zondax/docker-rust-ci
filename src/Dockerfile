@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #*******************************************************************************
-FROM rust:1.53.0
+FROM rust:1.57.0
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
@@ -30,7 +30,7 @@ RUN cargo install wasm-pack
 RUN cargo install cargo-tree
 
 # Install lastest lts node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install nodejs sudo
 RUN npm install -g yarn
 
