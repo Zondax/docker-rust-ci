@@ -21,7 +21,7 @@ RUN apt-get update && \
 
 RUN rustc --version
 
-RUN rustup toolchain install 1.53.0
+RUN rustup toolchain install 1.57.0
 RUN rustup component add clippy
 RUN rustup component add rustfmt
 RUN cargo install sccache
