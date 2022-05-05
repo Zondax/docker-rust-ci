@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #*******************************************************************************
-FROM rust:1.59.0
+FROM rust:1.60.0
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
@@ -24,6 +24,7 @@ RUN rustc --version
 RUN rustup toolchain install 1.57.0
 RUN rustup component add clippy
 RUN rustup component add rustfmt
+RUN rustup toolchain install nightly --component miri
 RUN cargo install sccache
 RUN cargo install cargo-audit
 RUN cargo install wasm-pack
