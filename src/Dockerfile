@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #*******************************************************************************
-FROM rust:1.59.0
+FROM rust:1.65.0
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
