@@ -22,8 +22,9 @@ RUN apt-get update && \
 RUN rustc --version
 
 RUN rustup toolchain install 1.67.1
-RUN rustup component add clippy
-RUN rustup component add rustfmt
+RUN rustup toolchain install nightly-2022-12-02
+RUN rustup component add clippy rustfmt 
+RUN rustup component add clippy rustfmt miri --toolchain nightly-2022-12-02
 RUN rustup toolchain install nightly --component miri
 RUN cargo install sccache
 RUN cargo install cargo-audit
