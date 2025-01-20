@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #*******************************************************************************
-FROM rust:1.77.1
+FROM rust:1.83.0
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
@@ -21,10 +21,10 @@ RUN apt-get update && \
 
 RUN rustc --version
 
-RUN rustup toolchain install 1.77.1
-RUN rustup toolchain install nightly-2024-03-28
-RUN rustup component add clippy rustfmt 
-RUN rustup component add clippy rustfmt miri --toolchain nightly-2024-03-28
+RUN rustup toolchain install 1.83.0
+RUN rustup toolchain install nightly-2024-11-22
+RUN rustup component add clippy rustfmt
+RUN rustup component add clippy rustfmt miri --toolchain nightly-2024-11-22
 RUN rustup toolchain install nightly --component miri
 RUN cargo install sccache
 RUN cargo install cargo-audit
@@ -35,7 +35,6 @@ RUN cargo install cargo-tree
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install nodejs sudo
 RUN npm install -g yarn
-
 RUN node -v
 RUN yarn --version
 RUN yarn global add n
